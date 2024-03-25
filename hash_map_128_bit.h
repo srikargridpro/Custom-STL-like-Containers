@@ -4,6 +4,7 @@
 #include <memory>
 #include <set>
 #include <stack>
+#include <stdexcept>
 
 // Custom 128-bit hash struct
 struct _128_BIT_HASH_
@@ -178,6 +179,14 @@ public:
         throw std::out_of_range("Key not found");
     }
 
+    Value& operator[](const Key& key) {
+        return get(key);
+    }
+    
+    const Value& operator[](const Key& key) const {
+        return get(key);
+    }
+
     ///@brief Remove key-value pair from the hashmap
     void remove(const Key& key) {
         _128_BIT_HASH_ hash_val = hash_fun(key);
@@ -268,9 +277,14 @@ public:
     }
 
     pair<Key, Value>& operator*() {
-      pair<Key, Value>& key_pair = m_hashmap->hash_table[m_domain_index][m_pair_index];
-      while(!key_pair.isValid()) { ++(*this); if(m_domain_index == 0xffffffff && m_pair_index == 0xffffffff) break;}         
-        return key_pair;
+      pair<Key, Value>* key_pair = &m_hashmap->hash_table[m_domain_index][m_pair_index];
+      while(!key_pair->isValid()) 
+      {
+         ++(*this); 
+         if(m_domain_index == 0xffffffff && m_pair_index == 0xffffffff) break;
+         key_pair = &m_hashmap->hash_table[m_domain_index][m_pair_index];   
+      }            
+        return *key_pair;
     }
 
     bool operator==(const iterator& it) {
