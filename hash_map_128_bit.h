@@ -153,9 +153,17 @@ public:
     ~HashMap() {}
 
     ///@brief Add key-value pair to the hashmap
-    void add(const Key& key, const Value& value) {
+    void set(const Key& key, const Value& value) {
         _128_BIT_HASH_ hash_val = hash_fun(key);
         size_t domain_index = eval_domain_index(hash_val);
+        /// Search if the key already exists
+        for (auto& pair : hash_table[domain_index]) {
+            if ((pair.hash_value) == hash_val) {
+                *(pair.value) = value;
+                  return;
+            }
+        }
+        /// else create a new pair in the domain
         hash_table[domain_index].push_back(pair(std::make_shared<Key>(key), std::make_shared<Value>(value), hash_val));
     }
 
@@ -170,18 +178,6 @@ public:
         }
         throw std::out_of_range("Key not found");
     }
-    
-    void set(const Key& key, const Value& value) {
-        _128_BIT_HASH_ hash_val = hash_fun(key);
-        size_t domain_index = eval_domain_index(hash_val);
-        for (auto& pair : hash_table[domain_index]) {
-            if ((pair.hash_value) == hash_val) {
-                *(pair.value) = value;
-                return;
-            }
-        }
-    }
-
 
     ///@brief Remove key-value pair from the hashmap
     void remove(const Key& key) {
