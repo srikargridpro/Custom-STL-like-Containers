@@ -1,6 +1,5 @@
 #ifndef _128_BIT_HASH_MAP_H_
 #define _128_BIT_HASH_MAP_H_
-#include <iostream>
 #include <deque>
 #include <memory>
 #include <set>
