@@ -307,7 +307,7 @@ public:
         sub_domain[2] = hash_val._32_bit_id[2] % max_domains;
         sub_domain[3] = hash_val._32_bit_id[3] % max_domains;
         
-        size_t domain_index = (sub_domain[0] + sub_domain[1] + sub_domain[2] + sub_domain[3]) % max_domains;
+        size_t domain_index = (sub_domain[0] + sub_domain[1]) + (sub_domain[2] + sub_domain[3]) % max_domains;
         return domain_index;
     }
 };
