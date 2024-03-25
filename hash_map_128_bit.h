@@ -270,7 +270,7 @@ public:
 
     pair<Key, Value>& operator*() {
       pair<Key, Value>& key_pair = m_hashmap->hash_table[m_domain_index][m_pair_index];
-      while(!key_pair.hash_value.isValid()) { ++(*this);}         
+      while(!key_pair.isValid()) { ++(*this); if(m_domain_index == 0xffffffff && m_pair_index == 0xffffffff) break;}         
         return key_pair;
     }
 

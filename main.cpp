@@ -5,8 +5,8 @@ int main() {
     HashMap<std::string, std::string, 20> hashmap2;
     for(int i = 0; i < 1000; i++)
     {
-        hashmap.add(i, "Value" + std::to_string(i));
-        hashmap2.add("Key" + std::to_string(i), "Value" + std::to_string(i));
+        hashmap.set(i, "Value" + std::to_string(i));
+        hashmap2.set("Key" + std::to_string(i), "Value" + std::to_string(i));
     }
 
     for(int i = 0; i < 100; i++)
