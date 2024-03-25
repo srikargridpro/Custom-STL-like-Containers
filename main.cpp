@@ -1,4 +1,5 @@
 #include "hash_map_128_bit.h"
+#include <iostream>
 int main() {
     // Example usage
     HashMap<int, std::string , 20> hashmap;
