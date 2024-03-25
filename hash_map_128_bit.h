@@ -269,7 +269,9 @@ public:
     }
 
     pair<Key, Value>& operator*() {
-            return m_hashmap->hash_table[m_domain_index][m_pair_index];
+      pair<Key, Value>& key_pair = m_hashmap->hash_table[m_domain_index][m_pair_index];
+      while(!key_pair.hash_value.isValid()) { ++(*this);}         
+        return key_pair;
     }
 
     bool operator==(const iterator& it) {
