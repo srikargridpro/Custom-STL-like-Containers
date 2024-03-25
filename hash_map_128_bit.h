@@ -109,8 +109,8 @@ struct pair {
     void invalidate() {
         hash_value._64_bit_id[0] = 0xffffffffffffffff;
         hash_value._64_bit_id[1] = 0xffffffffffffffff;
-        key.reset(nullptr);
-        value.reset(nullptr);
+        key.reset();
+        value.reset();
     }
 
     bool isValid() {
