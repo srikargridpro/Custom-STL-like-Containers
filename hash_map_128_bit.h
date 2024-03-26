@@ -213,6 +213,7 @@ public:
             if ((pair.hash_value) == hash_val) {
                 pair.invalidate();
                 free_indices.push({domain_index,index});
+                 break;
             }
             ++index;
         }
