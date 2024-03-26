@@ -140,6 +140,7 @@ struct hashfuntor {
         hash_val._128_bit_id.set_32_bit_field(0 , std::hash<Key>{}(key) +  1);
         hash_val._128_bit_id.set_32_bit_field(1 , std::hash<Key>{}(key));
         hash_val._128_bit_id.set_32_bit_field(2 , std::hash<Key>{}(key) +  1);
+        hash_val._128_bit_id.set_32_bit_field(3 , std::hash<Key>{}(key));
         return hash_val;
     }
 };
