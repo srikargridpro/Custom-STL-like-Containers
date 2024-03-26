@@ -1,9 +1,9 @@
-#include <iostream>
-#include <vector>
+#ifndef _HAZARD_MEM_ALLOCATOR_H_
+#define _HAZARD_MEM_ALLOCATOR_H_
 #include <atomic>
-#include <cassert>
+#include <stdexcept>
 #include <memory>
-#include <deque>
+#include <unordered_map>
 
 
 class memory_allocator_details {
@@ -17,11 +17,11 @@ class memory_allocator_details {
 
 };
 
-template <class T, std::size_t bufferSize = 4096>
+template <class T, std::size_t elements = 4096>
 class HazardMemoryPool :  public memory_allocator_details
 {
     public:
-    alignas(T) uint8_t buffer[bufferSize*sizeof(T)];
+    alignas(T) uint8_t buffer[elements*sizeof(T)];
     std::atomic<std::size_t> nextIndex{0};
 
     struct object_memory_info
