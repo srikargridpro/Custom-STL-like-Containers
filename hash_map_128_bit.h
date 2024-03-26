@@ -310,14 +310,13 @@ public:
     }
 
     bool operator!=(const iterator& it) {
-        return (m_domain_index != it.m_domain_index && m_pair_index != it.m_pair_index);
+        return (m_domain_index != it.m_domain_index || m_pair_index != it.m_pair_index);
     }
 
     private :
     HashMap<Key, Value, max_domains, Hash>* m_hashmap;
     size_t m_domain_index;
     size_t m_pair_index;
-
     };   
 
     iterator begin() {
