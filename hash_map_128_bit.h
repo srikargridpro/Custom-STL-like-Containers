@@ -218,7 +218,7 @@ public:
             }
         }
         /// else create a new pair in the domain
-        hash_table[domain_index].push_back(pair(std::make_shared<Key>(key), std::make_shared<Value>(value), hash_val));
+        hash_table[domain_index].push_back(pair<Key, Value>(std::make_shared<Key>(key), std::make_shared<Value>(value), hash_val));
     }
 
     ///@brief Retrieve value associated with key
