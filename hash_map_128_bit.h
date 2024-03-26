@@ -343,6 +343,10 @@ public:
         return *key_pair;
     }
 
+    pair<Key, Value>* operator->() {
+        return &operator*();
+    }
+
     bool operator==(const iterator& it) {
         return (m_domain_index == it.m_domain_index && m_pair_index == it.m_pair_index);
     }
