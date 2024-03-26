@@ -209,7 +209,6 @@ public:
     void set(const Key& key, const Value& value) {
         _128_BIT_HASH_ hash_val = hash_fun(key);
         size_t domain_index = eval_domain_index(hash_val);
-        std::cout << "Domain index = " << domain_index << "\n";
         /// Search if the key already exists
         for (auto& pair : hash_table[domain_index]) {
             if ((pair.hash_value) == hash_val) {
