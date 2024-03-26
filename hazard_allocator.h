@@ -47,7 +47,7 @@ class HazardMemoryPool :  public memory_allocator_details
         T* ptr = reinterpret_cast<T* >(&buffer[nextIndex]);
         memory_block_map[ptr].start_idx = nextIndex.load();
         nextIndex.fetch_add(obj_count*sizeof(T));
-        memory_block_map[ptr].end_idx = nextIndex.load(); 
+        memory_block_map[ptr].end_idx = memory_block_map[ptr].start_idx + obj_count*sizeof(T); 
         return ptr;
     }
 
@@ -56,6 +56,12 @@ class HazardMemoryPool :  public memory_allocator_details
           memory_block_map[pointer].is_deallocated = true;
        // Deallocation is a no-op in this allocator
        // Deferred Reclaimation 
+       // or Stack like reclaimation
+       if(memory_block_map[ptr].end_idx == nextIndex.load())
+       {
+           nextIndex.store(memory_block_map[ptr].start_idx);
+       } 
+          
     }  
 };
 
