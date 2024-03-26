@@ -2,9 +2,10 @@
 #define _128_BIT_HASH_MAP_H_
 #include <deque>
 #include <memory>
-#include <set>
+#include <array>
 #include <stack>
 #include <stdexcept>
+#include <algorithm>
 
 // Custom 128-bit hash struct
 struct _128_BIT_HASH_
@@ -42,22 +43,20 @@ struct _128_BIT_HASH_
     }
 
     _128_BIT_HASH_(const uint32_t& id_1, const uint32_t& id_2, const uint32_t& id_3, const uint32_t& id_4) {
-        std::set<uint32_t> ids = {id_1, id_2, id_3, id_4};
-        
+        std::array<uint32_t, 4> ids = {id_1, id_2, id_3, id_4};
+        std::sort(ids.begin(), ids.end());
         for(int i = 0; i < 4; i++)
         {
-            _32_bit_id[i] = *ids.begin();
-            ids.erase(ids.begin());
+            _32_bit_id[i] = ids[i];
         }
     }
 
     _128_BIT_HASH_(const uint16_t& id_1, const uint16_t& id_2, const uint16_t& id_3, const uint16_t& id_4, const uint16_t& id_5, const uint16_t& id_6, const uint16_t& id_7, const uint16_t& id_8) {
-        std::set<uint16_t> ids = {id_1, id_2, id_3, id_4, id_5, id_6, id_7, id_8};
-        
+        std::array<uint16_t> ids = {id_1, id_2, id_3, id_4, id_5, id_6, id_7, id_8};
+        std::sort(ids.begin(), ids.end());
         for(int i = 0; i < 8; i++)
         {
-            _16_bit_id[i] = *ids.begin();
-            ids.erase(ids.begin());
+            _16_bit_id[i] = ids[i];
         }
     }
 
