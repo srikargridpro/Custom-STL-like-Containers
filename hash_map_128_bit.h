@@ -287,6 +287,7 @@ public:
         return total_size;
     }
     
+    /// @brief HashMap::iterator class
     class iterator {
     public :
     iterator(HashMap<Key, Value, max_domains, Hash>* hashmap) : m_hashmap(hashmap), m_domain_index(0), m_pair_index(0) 
