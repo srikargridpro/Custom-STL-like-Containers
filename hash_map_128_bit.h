@@ -46,19 +46,19 @@ struct _128_BIT_HASH_
       {
           if(index == 0)
           {
-            _64_bit_id[0]  =  (static_cast<uint64_t>(this->operator[](1)) << 32) | value;
+              _64_bit_id[0]  =  (static_cast<uint64_t>(this->operator[](1)) << 32) | value;
           }
           else if(index == 1)
           {
-            _64_bit_id[0]  =  (static_cast<uint64_t>(value) << 32) | this->operator[](0);
+              _64_bit_id[0]  =  (static_cast<uint64_t>(value) << 32) | this->operator[](0);
           }
           else if(index == 2)
           {
-                _64_bit_id[1]  =  (static_cast<uint64_t>(this->operator[](3)) << 32) | value;
+              _64_bit_id[1]  =  (static_cast<uint64_t>(this->operator[](3)) << 32) | value;
           }
           else if(index == 3)
           {
-                _64_bit_id[1] =  (static_cast<uint64_t>(value) << 32) | this->operator[](2);
+              _64_bit_id[1]  =  (static_cast<uint64_t>(value) << 32) | this->operator[](2);
           }
           else
           {
@@ -120,9 +120,7 @@ struct _128_BIT_HASH_
         else if(_128_bit_id._64_bit_id[0] == hash._128_bit_id._64_bit_id[0])
         {
             if(_128_bit_id._64_bit_id[1] > hash._128_bit_id._64_bit_id[1])
-            {
-                return true;
-            }
+               return true;
         }
     }
 
@@ -182,7 +180,8 @@ struct hashfuntor {
     }
 };
 
-// Custom hash map class with 128-bit hash tables
+/// @class HashMap 
+/// @brief Custom hash map class with 128-bit hash tables
 template <typename Key, typename Value, size_t max_domains = 10, typename Hash = hashfuntor<Key>>
 class HashMap {
 private:
