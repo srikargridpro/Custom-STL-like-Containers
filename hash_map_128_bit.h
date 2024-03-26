@@ -1,11 +1,14 @@
 #ifndef _128_BIT_HASH_MAP_H_
 #define _128_BIT_HASH_MAP_H_
+
 #include <deque>
 #include <memory>
 #include <array>
 #include <stack>
 #include <stdexcept>
 #include <algorithm>
+
+#include "hazard_allocator.h"
 
 // Custom 128-bit hash struct
 struct _128_BIT_HASH_
