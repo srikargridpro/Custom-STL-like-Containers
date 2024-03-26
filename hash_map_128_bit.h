@@ -138,8 +138,8 @@ private:
     {
         size_t domain_index;
         size_t pair_index;
+        free_index(const size_t& domain_index, const size_t& pair_index) : domain_index(domain_index), pair_index(pair_index) {}
         free_index() {}
-        free_index(size_t domain_index, size_t pair_index) : domain_index(domain_index), pair_index(pair_index) {}
        ~free_index() {}
     }; 
     std::stack<free_index> free_indices;
@@ -214,7 +214,7 @@ public:
     }
 
     ///@brief Get the size of the hashmap for a specific domain
-    size_t getDomainSize(size_t domain_index) const {
+    size_t getDomainSize(const size_t& domain_index) const {
         if(domain_index >= max_domains)
         {
             throw std::out_of_range("Domain index out of range");
