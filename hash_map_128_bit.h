@@ -7,89 +7,119 @@
 #include <stack>
 #include <stdexcept>
 #include <algorithm>
-
-#include "hazard_allocator.h"
+#include <iostream>
 
 // Custom 128-bit hash struct
 struct _128_BIT_HASH_
 {
-   union 
+   struct _128_bit_type
    {
-      uint8_t     _8_bit_id[16]; 
-      uint16_t    _16_bit_id[8];
-      uint32_t    _32_bit_id[4];
-      uint64_t    _64_bit_id[2];
+       uint64_t    _64_bit_id[2];
+
+      _128_bit_type() : _64_bit_id{0,0} {}
+      
+      uint32_t operator[](const size_t& index) const
+      {
+          if(index == 0)
+          {
+            return uint32_t(_64_bit_id[0] & 0xFFFFFFFF);
+          }
+          else if(index == 1)
+          {
+                return uint32_t((_64_bit_id[0] >> 32) & 0xFFFFFFFF);
+          }
+          else if(index == 2)
+          {
+                 return uint32_t(_64_bit_id[1] & 0xFFFFFFFF);
+          }
+          else if(index == 3)
+          {
+               return uint32_t((_64_bit_id[1] >> 32) & 0xFFFFFFFF);
+          }
+          else
+          {
+              throw std::out_of_range("Index out of range");
+          }
+      }
+
+      void set_32_bit_field(const size_t& index, const uint32_t& value)
+      {
+          if(index == 0)
+          {
+            _64_bit_id[0]  =  (static_cast<uint64_t>(this->operator[](1)) << 32) | value;
+          }
+          else if(index == 1)
+          {
+            _64_bit_id[0]  =  (static_cast<uint64_t>(value) << 32) | this->operator[](0);
+          }
+          else if(index == 2)
+          {
+                _64_bit_id[1]  =  (static_cast<uint64_t>(this->operator[](3)) << 32) | value;
+          }
+          else if(index == 3)
+          {
+                _64_bit_id[1] =  (static_cast<uint64_t>(value) << 32) | this->operator[](2);
+          }
+          else
+          {
+              throw std::out_of_range("Index out of range");
+          }
+      }
    };
+
+    _128_bit_type _128_bit_id;
      
-    _128_BIT_HASH_() {
-        _64_bit_id[0] = 0;
-        _64_bit_id[1] = 0;
+    _128_BIT_HASH_() : _128_bit_id() {
+        _128_bit_id._64_bit_id[0] = 0;
+        _128_bit_id._64_bit_id[1] = 0;
     }
 
 
     _128_BIT_HASH_(const _128_BIT_HASH_& hash) {
-        _64_bit_id[0] = hash._64_bit_id[0];
-        _64_bit_id[1] = hash._64_bit_id[1];
+        _128_bit_id._64_bit_id[0] = hash._128_bit_id._64_bit_id[0];
+        _128_bit_id._64_bit_id[1] = hash._128_bit_id._64_bit_id[1];
     }
     
     _128_BIT_HASH_(const uint64_t& id_1, const uint64_t& id_2) {
         if(id_1 < id_2)
         {
-            _64_bit_id[0] = id_1;
-            _64_bit_id[1] = id_2;
+            _128_bit_id._64_bit_id[0] = id_1;
+            _128_bit_id._64_bit_id[1] = id_2;
         }
         else
         {
-            _64_bit_id[0] = id_2;
-            _64_bit_id[1] = id_1;
-        }
-    }
-
-    _128_BIT_HASH_(const uint32_t& id_1, const uint32_t& id_2, const uint32_t& id_3, const uint32_t& id_4) {
-        std::array<uint32_t, 4> ids = {id_1, id_2, id_3, id_4};
-        std::sort(ids.begin(), ids.end());
-        for(int i = 0; i < 4; i++)
-        {
-            _32_bit_id[i] = ids[i];
-        }
-    }
-
-    _128_BIT_HASH_(const uint16_t& id_1, const uint16_t& id_2, const uint16_t& id_3, const uint16_t& id_4, const uint16_t& id_5, const uint16_t& id_6, const uint16_t& id_7, const uint16_t& id_8) {
-        std::array<uint16_t, 8> ids = {id_1, id_2, id_3, id_4, id_5, id_6, id_7, id_8};
-        std::sort(ids.begin(), ids.end());
-        for(int i = 0; i < 8; i++)
-        {
-            _16_bit_id[i] = ids[i];
+            _128_bit_id._64_bit_id[0] = id_2;
+            _128_bit_id._64_bit_id[1] = id_1;
         }
     }
 
     _128_BIT_HASH_& operator=(const _128_BIT_HASH_& hash) {
-        _64_bit_id[0] = hash._64_bit_id[0];
-        _64_bit_id[1] = hash._64_bit_id[1];
+        _128_bit_id._64_bit_id[0] = hash._128_bit_id._64_bit_id[0];
+        _128_bit_id._64_bit_id[1] = hash._128_bit_id._64_bit_id[1];
         return *this;
     }
 
     bool operator==(const _128_BIT_HASH_& hash) const {
-        return _64_bit_id[0] == hash._64_bit_id[0] && _64_bit_id[1] == hash._64_bit_id[1];
+        return _128_bit_id._64_bit_id[0] == hash._128_bit_id._64_bit_id[0] && _128_bit_id._64_bit_id[1] == hash._128_bit_id._64_bit_id[1];
     }
 
     bool operator==(_128_BIT_HASH_& hash) {
-        return _64_bit_id[0] == hash._64_bit_id[0] && _64_bit_id[1] == hash._64_bit_id[1];
+        return _128_bit_id._64_bit_id[0] == hash._128_bit_id._64_bit_id[0] && _128_bit_id._64_bit_id[1] == hash._128_bit_id._64_bit_id[1];
     }
 
     bool operator!=(const _128_BIT_HASH_& hash) const {
-        return _64_bit_id[0] != hash._64_bit_id[0] || _64_bit_id[1] != hash._64_bit_id[1];
+        return _128_bit_id._64_bit_id[0] != hash._128_bit_id._64_bit_id[0] || _128_bit_id._64_bit_id[1] != hash._128_bit_id._64_bit_id[1];
     }
 
     bool operator>(_128_BIT_HASH_& hash)
     {
-        if(_64_bit_id[0] != hash._64_bit_id[0])
+        if(_128_bit_id._64_bit_id[0] != hash._128_bit_id._64_bit_id[0])
         {
-            return _64_bit_id[0] > hash._64_bit_id[0];
+            return _128_bit_id._64_bit_id[0] > hash._128_bit_id._64_bit_id[0];
         }
-        else if(_64_bit_id[0] == hash._64_bit_id[0])
+        else if(_128_bit_id._64_bit_id[0] == hash._128_bit_id._64_bit_id[0])
         {
-            if(_64_bit_id[1] > hash._64_bit_id[1])
+            if(_128_bit_id._64_bit_id[1] > hash._128_bit_id._64_bit_id[1])
             {
                 return true;
             }
@@ -101,11 +131,11 @@ struct _128_BIT_HASH_
     }
 };
 
-/// Custom hash function specialization for _128_BIT_HASH_
+
 
 // Custom pair struct
 template <typename Key, typename Value>
-struct pair {
+struct  pair  {
     std::shared_ptr<Key>   key;
     std::shared_ptr<Value> value;
     _128_BIT_HASH_         hash_value;
@@ -127,24 +157,27 @@ struct pair {
     }
 
     void invalidate() {
-        hash_value._64_bit_id[0] = 0xffffffffffffffff;
-        hash_value._64_bit_id[1] = 0xffffffffffffffff;
+        hash_value._128_bit_id._64_bit_id[0] = 0xffffffffffffffff;
+        hash_value._128_bit_id._64_bit_id[1] = 0xffffffffffffffff;
         key.reset();
         value.reset();
     }
 
     bool isValid() {
-        return hash_value._64_bit_id[0] != 0xffffffffffffffff && hash_value._64_bit_id[1] != 0xffffffffffffffff;
+        return hash_value._128_bit_id._64_bit_id[0] != 0xffffffffffffffff && hash_value._128_bit_id._64_bit_id[1] != 0xffffffffffffffff;
     }
 };
 
-// Custom hash function object
+/// @brief Custom hash function specialization for _128_BIT_HASH_
+/// Example : Custom hash function specialization for _128_BIT_HASH_
 template <typename Key>
 struct hashfuntor {
     _128_BIT_HASH_ operator()(const Key& key) const {
         // Custom hash function implementation
         _128_BIT_HASH_ hash_val;
-        hash_val._32_bit_id[0] = std::hash<Key>{}(key);
+        hash_val._128_bit_id.set_32_bit_field(0 , std::hash<Key>{}(key) +  1);
+        hash_val._128_bit_id.set_32_bit_field(1 , std::hash<Key>{}(key));
+        hash_val._128_bit_id.set_32_bit_field(2 , std::hash<Key>{}(key) +  1);
         return hash_val;
     }
 };
@@ -176,6 +209,7 @@ public:
     void set(const Key& key, const Value& value) {
         _128_BIT_HASH_ hash_val = hash_fun(key);
         size_t domain_index = eval_domain_index(hash_val);
+        std::cout << "Domain index = " << domain_index << "\n";
         /// Search if the key already exists
         for (auto& pair : hash_table[domain_index]) {
             if ((pair.hash_value) == hash_val) {
@@ -320,27 +354,37 @@ public:
     HashMap<Key, Value, max_domains, Hash>* m_hashmap;
     size_t m_domain_index;
     size_t m_pair_index;
-    };   
+    }; // end of iterator class  
 
+    ///@brief begin iterator
     iterator begin() {
         return iterator(this);
     }
-
+    
+    ///@brief end iterator
     iterator end() { 
         return iterator(this, 0xffffffff, 0xffffffff);
+    }
+
+    
+    ///@brief find the key in the hashmap and return iter
+    iterator find(const Key& key) {
+        _128_BIT_HASH_ hash_val = hash_fun(key);
+        size_t domain_index = eval_domain_index(hash_val);
+
+        for (size_t i = 0; i < hash_table[domain_index].size(); ++i) {
+            if (hash_table[domain_index][i].hash_value == hash_val) {
+                return iterator(this, domain_index, i);
+            }
+        }
+        return end();
     }
 
     private :
 
     size_t eval_domain_index(const _128_BIT_HASH_& hash_val) {
         size_t sub_domain[4];
-        
-        sub_domain[0] = hash_val._32_bit_id[0] % max_domains;
-        sub_domain[1] = hash_val._32_bit_id[1] % max_domains;
-        sub_domain[2] = hash_val._32_bit_id[2] % max_domains;
-        sub_domain[3] = hash_val._32_bit_id[3] % max_domains;
-        
-        size_t domain_index = (sub_domain[0] + sub_domain[1]) + (sub_domain[2] + sub_domain[3]) % max_domains;
+        size_t domain_index = ((hash_val._128_bit_id._64_bit_id[0] % max_domains) + (hash_val._128_bit_id._64_bit_id[1] % max_domains)) % max_domains;
         return domain_index;
     }
 };
