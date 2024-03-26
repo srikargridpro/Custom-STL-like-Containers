@@ -74,9 +74,27 @@ struct _128_BIT_HASH_
         return _64_bit_id[0] == hash._64_bit_id[0] && _64_bit_id[1] == hash._64_bit_id[1];
     }
 
-
     bool operator!=(const _128_BIT_HASH_& hash) const {
         return _64_bit_id[0] != hash._64_bit_id[0] || _64_bit_id[1] != hash._64_bit_id[1];
+    }
+
+    bool operator>(_128_BIT_HASH_& hash)
+    {
+        if(_64_bit_id[0] != hash._64_bit_id[0])
+        {
+            return _64_bit_id[0] > hash._64_bit_id[0];
+        }
+        else if(_64_bit_id[0] == hash._64_bit_id[0])
+        {
+            if(_64_bit_id[1] > hash._64_bit_id[1])
+            {
+                return true;
+            }
+        }
+    }
+
+    bool operator<(const _128_BIT_HASH_& hash) const {
+         return (*this < hash); 
     }
 };
 
