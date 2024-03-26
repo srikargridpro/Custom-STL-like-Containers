@@ -14,7 +14,7 @@ struct _128_BIT_HASH_
 {
    struct _128_bit_type
    {
-       uint64_t    _64_bit_id[2];
+       uint64_t  _64_bit_id[2];
 
       _128_bit_type() : _64_bit_id{0,0} {}
       
