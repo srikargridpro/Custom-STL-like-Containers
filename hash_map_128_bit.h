@@ -130,42 +130,6 @@ struct _128_BIT_HASH_
 };
 
 
-
-// Custom pair struct
-template <typename Key, typename Value>
-struct  pair  {
-    std::shared_ptr<Key>   key;
-    std::shared_ptr<Value> value;
-    _128_BIT_HASH_         hash_value;
-
-    pair(const std::shared_ptr<Key>& key, const std::shared_ptr<Value>& value, const _128_BIT_HASH_& hash_value) : key(key), value(value), hash_value(hash_value) {}
-   ~pair() {}
-    
-    pair(const pair& p) {
-        key = p.key;
-        value = p.value;
-        hash_value = p.hash_value;
-    }
-
-    pair& operator=(const pair& p) {
-        key = p.key;
-        value = p.value;
-        hash_value = p.hash_value;
-        return *this;
-    }
-
-    void invalidate() {
-        hash_value._128_bit_id._64_bit_id[0] = 0xffffffffffffffff;
-        hash_value._128_bit_id._64_bit_id[1] = 0xffffffffffffffff;
-        key.reset();
-        value.reset();
-    }
-
-    bool isValid() {
-        return hash_value._128_bit_id._64_bit_id[0] != 0xffffffffffffffff && hash_value._128_bit_id._64_bit_id[1] != 0xffffffffffffffff;
-    }
-};
-
 /// @brief Custom hash function specialization for _128_BIT_HASH_
 /// Example : Custom hash function specialization for _128_BIT_HASH_
 template <typename Key>
