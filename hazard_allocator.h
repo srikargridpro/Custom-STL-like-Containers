@@ -57,9 +57,9 @@ class HazardMemoryPool :  public memory_allocator_details
        // Deallocation is a no-op in this allocator
        // Deferred Reclaimation 
        // or Stack like reclaimation
-       if(memory_block_map[ptr].end_idx == nextIndex.load())
+       if(memory_block_map[pointer].end_idx == nextIndex.load())
        {
-           nextIndex.store(memory_block_map[ptr].start_idx);
+           nextIndex.store(memory_block_map[pointer].start_idx);
        } 
           
     }  
@@ -120,3 +120,4 @@ class HazardAllocator
             return memory_pool.nextIndex.load();
         }
 };
+#endif
