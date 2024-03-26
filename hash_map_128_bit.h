@@ -52,7 +52,7 @@ struct _128_BIT_HASH_
     }
 
     _128_BIT_HASH_(const uint16_t& id_1, const uint16_t& id_2, const uint16_t& id_3, const uint16_t& id_4, const uint16_t& id_5, const uint16_t& id_6, const uint16_t& id_7, const uint16_t& id_8) {
-        std::array<uint16_t> ids = {id_1, id_2, id_3, id_4, id_5, id_6, id_7, id_8};
+        std::array<uint16_t, 8> ids = {id_1, id_2, id_3, id_4, id_5, id_6, id_7, id_8};
         std::sort(ids.begin(), ids.end());
         for(int i = 0; i < 8; i++)
         {
