@@ -184,6 +184,43 @@ struct hashfuntor {
 /// @brief Custom hash map class with 128-bit hash tables
 template <typename Key, typename Value, size_t max_domains = 10, typename Hash = hashfuntor<Key>>
 class HashMap {
+     public :
+     /// @class HashMap::pair
+     /// @brief Custom pair struct (equivalent to HashNode)
+     template <typename Key_T, typename Value_T>
+     struct pair {
+       std::shared_ptr<Key_T>   key;
+       std::shared_ptr<Value_T> value;
+       _128_BIT_HASH_           hash_value;
+
+       pair(const std::shared_ptr<Key_T>& key, const std::shared_ptr<Value_T>& value, const _128_BIT_HASH_& hash_value) : key(key), value(value), hash_value(hash_value) {}
+      ~pair() {}
+    
+       pair(const pair& p) {
+           key = p.key;
+           value = p.value;
+           hash_value = p.hash_value;
+       }
+
+       pair& operator=(const pair& p) {
+           key = p.key;
+           value = p.value;
+           hash_value = p.hash_value;
+           return *this;
+       }
+
+       void invalidate() {
+           hash_value._128_bit_id._64_bit_id[0] = 0xffffffffffffffff;
+           hash_value._128_bit_id._64_bit_id[1] = 0xffffffffffffffff;
+           key.reset();
+           value.reset();
+       }
+
+       bool isValid() {
+            return hash_value._128_bit_id._64_bit_id[0] != 0xffffffffffffffff && hash_value._128_bit_id._64_bit_id[1] != 0xffffffffffffffff;
+       }
+    }; // struct HashMap::pair
+
 private:
     std::deque<pair<Key, Value>> hash_table[max_domains];
     Hash hash_fun;
