@@ -221,7 +221,8 @@ public:
         hash_table[domain_index].push_back(pair<Key, Value>(std::make_shared<Key>(key), std::make_shared<Value>(value), hash_val));
     }
 
-    ///@brief Retrieve value associated with key
+    /// @brief Retrieve value associated with key
+    /// @throws std::out_of_range(err)
     Value& get(const Key& key) {
         _128_BIT_HASH_ hash_val = hash_fun(key);
         size_t domain_index = eval_domain_index(hash_val);
@@ -234,11 +235,29 @@ public:
     }
 
     Value& operator[](const Key& key) {
-        return get(key);
-    }
+        _128_BIT_HASH_ hash_val = hash_fun(key);
+        size_t domain_index = eval_domain_index(hash_val);
+        for (auto& pair : hash_table[domain_index]) {
+            if ((pair.hash_value) == hash_val) {
+                return *(pair.value);
+            }
+        }
+        Value value;  
+        hash_table[domain_index].push_back(pair<Key, Value>(std::make_shared<Key>(key), std::make_shared<Value>(value), hash_val));
+        return *(hash_table[domain_index].back().value);
+     }
     
     const Value& operator[](const Key& key) const {
-        return get(key);
+        _128_BIT_HASH_ hash_val = hash_fun(key);
+        size_t domain_index = eval_domain_index(hash_val);
+        for (auto& pair : hash_table[domain_index]) {
+            if ((pair.hash_value) == hash_val) {
+                return *(pair.value);
+            }
+        }
+        Value value;  
+        hash_table[domain_index].push_back(pair<Key, Value>(std::make_shared<Key>(key), std::make_shared<Value>(value), hash_val));
+        return *(hash_table[domain_index].back().value);
     }
 
     ///@brief Remove key-value pair from the hashmap
