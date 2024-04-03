@@ -1,10 +1,13 @@
+#ifndef _ADAPTABLE_SHARED_PTR_H_
+#define _ADAPTABLE_SHARED_PTR_H_
+
 #include <atomic>
-#include <iostream>
 #include <type_traits>
 #include <unordered_map>
-#include <vector>
+
 
 namespace gp {
+
 class spinlock {
 public:
     void lock() {
@@ -445,30 +448,4 @@ private:
 };
 } // namespace gp
 
-int main()
-{
-    gp::atomic<int> atomic_obj(10);
-    atomic_obj = 19;
-    ++atomic_obj;
-    atomic_obj == 20 ? std::cout << "Atomic object is 20\n" : std::cout << "Atomic object is not 20\n";
-    atomic_obj += 20;
-    gp::atomic<char> (10);
-    gp::semi_atomic<int> semi_atomic_obj(10);
-    atomic_obj = semi_atomic_obj;
-
-    std::vector<int> vec = {1, 2, 3, 4, 5};
-    for(auto& val : vec)
-    {
-        std::cout << val << " ";
-    }
-
-    gp::shared_ptr<std::vector<int>> shared_ptr_obj((vec));
-    std::cout << "After shared pointer\n";
-    for(auto& val : vec)
-    {
-        std::cout << val << " ";
-    }
-    
-    // reclaimer<std::vector<int>>::reclaim();
-
-}
+#endif
