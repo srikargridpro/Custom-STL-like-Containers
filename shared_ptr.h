@@ -291,6 +291,7 @@ private:
            if(pair.second)
            {
                delete pair.first;
+               pair.second = false;
            }
         }
       }
