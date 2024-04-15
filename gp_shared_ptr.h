@@ -116,9 +116,6 @@
        }      
    };
 
-
-
-
    // Shared Pointer Implementation
    template <typename T, typename ref_counter = atomic<uint32_t>, typename memory_manager = reclaimer<control_block<T, ref_counter>>>
    class _shared_ptr_
