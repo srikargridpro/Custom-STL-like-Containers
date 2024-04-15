@@ -211,3 +211,5 @@ private:
     spinlock m_spinlock;
     friend class atomic_interface_base<T, semi_atomic<T>>;
 };
+
+} // namespace gp
