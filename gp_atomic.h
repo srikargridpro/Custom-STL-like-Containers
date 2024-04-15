@@ -208,7 +208,6 @@ private:
     }
 
     T m_data_object;
-    T* m_data;
     spinlock m_spinlock;
     friend class atomic_interface_base<T, semi_atomic<T>>;
 };
