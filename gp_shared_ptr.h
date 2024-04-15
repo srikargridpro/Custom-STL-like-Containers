@@ -2,7 +2,7 @@
 #define _ADAPTABLE_SHARED_PTR_H_
 
 #include "gp_atomic.h"
-
+namespace gp {
    // Shared Pointer Implementation
    // Forward Declarations
 
